@@ -4,6 +4,8 @@ import os
 import random
 import math
 
+from pygame.constants import K_KP_ENTER, TIMER_RESOLUTION
+
 
 pygame.init()
 pygame.display.set_caption("Snake Game")
@@ -43,9 +45,73 @@ black = pygame.Color(0,0,0)
 # for clock at the left corner
 gameClock = pygame.time.Clock()
 
+def checkCollision(posA, As, posB, Bs):    # As is the size of a and Bs is the size of b
+    if (posA.x < posB.x+Bs and posA.x+As > posB.x and posA.y < posB.y+Bs and posA.y+As > posB.y):
+        return True
+    return False
+
+# to check boundaries, here we are not limiting boundaries like it can pass through screen and come from other side
+
+def checkLimits(snake):
+    if (snake.x > SCREEN_WIDTH):
+        snake.x = SNAKE_SIZE
+    if (snake.x <0):            # Opposite side ma snake bhayo bhane check garxa
+        snake.x = SCREEN_WIDTH - SNAKE_SIZE
+    if (snake.y > SCREEN_HEIGHT):
+        snake.y = SNAKE_SIZE
+    if (snake.y < 0):      # same tara y-axix ma laa
+        snake.y = SCREEN_HEIGHT - SNAKE_SIZE
+
+
+# we make a class for food for the snake lets name it apple
+
+class Apple:
+    def __init__(self,x,y,state):
+        self.x = x
+        self.y = y
+        self.state = state
+        self.color = pygame.color.Color("orange")  # colour of food
+        
+    def draw(self,screen):
+        pygame.draw.rect(screen,self.color,(self.x,self.y,APPLE_SIZE,APPLE_SIZE),0)
+        
+class segment:
+    #initially snake will move in up direction
+    def __init__(self,x,y):
+        self.x = x
+        self.y  =y
+        self.direction = KEY["UP"]
+        self.color = "white"
+
+class snake:
+    def __init__(self,x,y):
+        self.x =x 
+        self.y =y 
+        self.direction = KEY["UP"]
+        self.stack = [] #initially empty
+        self.stack.append(self)
+        blackBox = segment(self.x,self.y + SEPERATION)
+        blackBox.direction = KEY['UP']
+        blackBox.color = "NULL"
+        self.stack.append(blackBox)
+
+# we will define moves of the snake
+    def move(self):
+        last_element = len(self.stack) -1
+        while(last_element !=0):
+            self.stack[last_element].direction = self.stack[last_element].direction
+            self.stack[last_element].x = self.stack[last_element-1].x
+            self.stack[last_element].y = self.stack[last_element-1].y
+            last_element -= 1
+        if (len(self,stack)<2):
+            last_segment = self
+        else:
+            last_segment = self.stack,pop(last_element)
+
+
 # we will define keys
 
-def getKey():
+def getKey():xy
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
@@ -94,7 +160,15 @@ def endgame():
         gameClock.tick(FPS)
     sys.exit(0)
 
-def drar
+def drawScore(score):
+    score_numb = score_numb_font.render(str(score),pygame.Color("red"))
+    screen.blit(score_msg,(SCREEN_WIDTH - score_msg_size[0]-60,10))
+    screen.blit(score_numb,(SCREEN_WIDTH -45, 14))
+
+def drawGameTime(gameTime):
+    game_time = score_font.render("Time:", 1, pygame.Color("white"))
+    game_time_numb = score_numb_font.render(str(gameTime/1000),1,pygame.Color("white"))
+
 def main():
 
 
