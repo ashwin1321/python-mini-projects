@@ -106,7 +106,8 @@ class snake:
         if (len(self,stack)<2):
             last_segment = self
         else:
-            last_segment = self.stack,pop(last_element)
+            last_segment = self.stack,pop(last_element) 
+            16:09
 
 
 # we will define keys
